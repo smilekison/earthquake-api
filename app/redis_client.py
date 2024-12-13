@@ -17,14 +17,11 @@ def get_redis_client():
         )
         if client.ping():
             logger.info(f"✅ Successfully connected to Redis at {REDIS_HOST}:{REDIS_PORT}")
+            return client
         else:
             logger.warning("⚠️ Redis ping failed")
             return None
     except redis.ConnectionError as e:
         logger.warning(f"⚠️ Failed to connect to Redis: {str(e)}")
         return None
-    except Exception as e:
-        logger.warning(f"⚠️ Unexpected error connecting to Redis: {str(e)}")
-        return None
-    return client
 redis_client = get_redis_client()
