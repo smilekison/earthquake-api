@@ -1,24 +1,19 @@
 services:
+  # Our Earthquake API service
   api:
-    build: .
-    container_name: app  # Set the container name to "app"
-    restart: always  # Automatically restart the container
+    build: .  # Builds from our Dockerfile
+    container_name: earthquake-api
     ports:
-      - "8000:8000"
-    depends_on:
-      - redis
+      - "8000:8000"  # Maps container port to host port
     environment:
-      - REDIS_HOST=redis
-    networks:
-      - app-network
-
+      - REDIS_HOST=redis  # Points to the Redis service name
+      - REDIS_PORT=6379  # Default Redis port
+    depends_on:
+      - redis  # Ensures Redis starts first
+  
+  # Redis service for caching
   redis:
-    image: redis:latest
-    container_name: redis  # Set the container name to "redis"
-    restart: always  # Automatically restart the container
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
+    image: redis:latest  # Using latest Redis image
+    container_name: earthquake-redis
+    ports:
+      - "6379:6379"  # Maps Redis port to host
