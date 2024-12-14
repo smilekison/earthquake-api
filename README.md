@@ -28,6 +28,8 @@ cd earthquake-api
 
 2. Start the services:
 ```bash
+docker build -t earthquake-api .
+
 docker-compose up -d
 ```
 
