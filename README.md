@@ -23,7 +23,7 @@ A FastAPI-based service that provides earthquake data for the San Francisco Bay 
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd earthquake-api
+cd <repository>
 ```
 
 2. Start the services:
