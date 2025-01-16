@@ -5,3 +5,4 @@ redis==5.0.1
 python-dotenv==1.0.0
 pydantic
 xmltodict==0.13.0
+pytest
