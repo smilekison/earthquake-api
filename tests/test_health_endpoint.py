@@ -1,32 +1,27 @@
-import unittest
+import pytest
 import requests
+from datetime import datetime, timezone
 
-class TestHealthEndpoint(unittest.TestCase):
-    BASE_URL = "http://localhost:8000"  # Base URL of your API
+# Base URL of the API
+BASE_URL = "http://localhost:8000"
 
-    def test_health_endpoint(self):
-        # Make a GET request to the /health endpoint
-        response = requests.get(f"{self.BASE_URL}/")
-        
-        # Check if the response status code is 200 (OK)
-        self.assertEqual(response.status_code, 200, "Expected status code 200")
+def test_successful_response():
+    """
+    Test that the endpoint returns a successful response.
+    """
+    response = requests.get(f"{BASE_URL}/")
+    assert response.status_code == 200, "Expected status code 200"
+    data = response.json()
+    assert "status" in data, "Response should contain 'status'"
+    assert "timestamp" in data, "Response should contain 'timestamp'"
+    assert "cache_status" in data, "Response should contain 'cache_status'"
+    assert data["status"] == "healthy", "Expected status to be 'healthy'"
 
-        # Parse the JSON response
-        data = response.json()
-
-        # Check if the response contains the expected keys
-        self.assertIn("status", data, "Response should contain 'status'")
-        self.assertIn("timestamp", data, "Response should contain 'timestamp'")
-        self.assertIn("cache_status", data, "Response should contain 'cache_status'")
-
-        # Check if the status is "healthy"
-        self.assertEqual(data["status"], "healthy", "Expected status to be 'healthy'")
-
-        # Check if cache_status is either "connected" or "disconnected"
-        self.assertIn(data["cache_status"], ["connected", "disconnected"], "cache_status should be 'connected' or 'disconnected'")
-
-        # Optionally, you can print the response for debugging
-        print("Health Check Response:", data)
-
-if __name__ == "__main__":
-    unittest.main()
+def test_cache_status():
+    """
+    Test that the cache_status is either 'connected' or 'disconnected'.
+    """
+    response = requests.get(f"{BASE_URL}/")
+    assert response.status_code == 200, "Expected status code 200"
+    data = response.json()
+    assert data["cache_status"] in ["connected", "disconnected"], "cache_status should be 'connected' or 'disconnected'"
