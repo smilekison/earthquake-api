@@ -177,3 +177,42 @@ def test_edge_case_min_felt_reports_zero():
     data = response.json()
     for feature in data["features"]:
         assert feature["properties"].get("felt", 0) >= 0, "All earthquakes should have >= 0 felt reports"
+
+def test_large_dataset_performance():
+    """
+    Test the performance of the API when requesting a large dataset (e.g., 2014 to 2024).
+    """
+    start_time = "2004-01-01T00:00:00"
+    end_time = "2024-01-01T00:00:00"
+    min_felt_reports = 2  # Adjust as needed
+
+    # Measure the time taken to process the request
+    import time
+    start = time.time()
+
+    response = requests.get(
+        f"{BASE_URL}/earthquake-felt",
+        params={
+            "start_time": start_time,
+            "end_time": end_time,
+            "min_felt_reports": min_felt_reports,
+        },
+    )
+
+    end = time.time()
+    elapsed_time = end - start
+
+    # Check if the response is successful
+    assert response.status_code == 200, "Expected status code 200"
+
+    # Check the size of the response
+    response_size = len(response.content)  # Size in bytes
+    print(f"Response size: {response_size} bytes")
+    print(f"Time taken: {elapsed_time} seconds")
+
+    # Optionally, set a limit for response size and time
+    MAX_RESPONSE_SIZE = 10 * 1024 * 1024  # 10 MB
+    MAX_RESPONSE_TIME = 30  # 30 seconds
+
+    assert response_size <= MAX_RESPONSE_SIZE, f"Response size exceeds {MAX_RESPONSE_SIZE} bytes"
+    assert elapsed_time <= MAX_RESPONSE_TIME, f"Response time exceeds {MAX_RESPONSE_TIME} seconds"
